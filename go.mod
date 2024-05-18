@@ -1,3 +1,3 @@
-module github.com/tsawler/toolbox
+module github.com/hostedbrains/toolbox
 
-go 1.19
+go 1.22
