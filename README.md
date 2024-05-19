@@ -1,10 +1,10 @@
 [![Version](https://img.shields.io/badge/goversion-1.22.x-blue.svg)](https://golang.org)
 <a href="https://golang.org"><img src="https://img.shields.io/badge/powered_by-Go-3362c2.svg?style=flat-square" alt="Built with GoLang"></a>
 [![License](http://img.shields.io/badge/license-apache-blue.svg?style=flat-square)](https://raw.githubusercontent.com/hostedbrains/toolbox/master/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tsawler/toolbox)](https://goreportcard.com/report/github.com/tsawler/toolbox)
-![Tests](https://github.com/tsawler/toolbox/actions/workflows/tests.yml/badge.svg)
-<a href="https://pkg.go.dev/github.com/tsawler/toolbox"><img src="https://img.shields.io/badge/godoc-reference-%23007d9c.svg"></a>
-[![Go Coverage](https://github.com/tsawler/toolbox/wiki/coverage.svg)](https://raw.githack.com/wiki/tsawler/toolbox/coverage.html)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hostedbrains/toolbox)](https://goreportcard.com/report/github.com/hostedbrains/toolbox)
+![Tests](https://github.com/hostedbrains/toolbox/actions/workflows/tests.yml/badge.svg)
+<a href="https://pkg.go.dev/github.com/hostedbrains/toolbox"><img src="https://img.shields.io/badge/godoc-reference-%23007d9c.svg"></a>
+[![Go Coverage](https://github.com/hostedbrains/toolbox/wiki/coverage.svg)](https://raw.githack.com/wiki/hostedbrains/toolbox/coverage.html)
 
 # Toolbox
 
@@ -27,7 +27,7 @@ The included tools are:
 
 ## Installation
 
-`go get -u github.com/tsawler/toolbox`
+`go get -u github.com/hostedbrains/toolbox`
 
 
 ## Usage
@@ -37,7 +37,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/tsawler/toolbox"
+	"github.com/hostedbrains/toolbox"
 )
 
 func main() {
