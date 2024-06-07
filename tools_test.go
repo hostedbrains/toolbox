@@ -9,6 +9,7 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -610,5 +611,46 @@ func TestTools_ErrorXML(t *testing.T) {
 
 	if rr.Code != http.StatusServiceUnavailable {
 		t.Errorf("wrong status code returned; expected 503, but got %d", rr.Code)
+	}
+}
+
+func TestTools_CheckFileExist(t1 *testing.T) {
+	type fields struct {
+		MaxJSONSize        int
+		MaxXMLSize         int
+		MaxFileSize        int
+		AllowedFileTypes   []string
+		AllowUnknownFields bool
+		ErrorLog           *log.Logger
+		InfoLog            *log.Logger
+	}
+	type args struct {
+		filePath string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		// TODO: Add test cases.
+		{"Check file exists true", fields{}, args{"./testdata/img.png"}, true},
+		{"Check file exists false", fields{}, args{"./testdata/image.png"}, false},
+	}
+	for _, tt := range tests {
+		t1.Run(tt.name, func(t1 *testing.T) {
+			t := &Tools{
+				MaxJSONSize:        tt.fields.MaxJSONSize,
+				MaxXMLSize:         tt.fields.MaxXMLSize,
+				MaxFileSize:        tt.fields.MaxFileSize,
+				AllowedFileTypes:   tt.fields.AllowedFileTypes,
+				AllowUnknownFields: tt.fields.AllowUnknownFields,
+				ErrorLog:           tt.fields.ErrorLog,
+				InfoLog:            tt.fields.InfoLog,
+			}
+			if got := t.CheckFileExist(tt.args.filePath); got != tt.want {
+				t1.Errorf("CheckFileExist() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

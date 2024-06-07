@@ -23,6 +23,7 @@ The included tools are:
 - Get a random string of length n
 - Post JSON to a remote service 
 - Create a directory, including all parent directories, if it does not already exist
+- Check if a file exists
 - Create a URL safe slug from a string
 
 ## Installation
@@ -110,6 +111,27 @@ func (app *Config) SomeHandler(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         // do something with the error...
     }
+	
+    // keep going in the handler...
+}
+```
+
+### Checking if file exists
+
+To check if a file exists:
+
+```go
+// SomeHandler is some kind of handler
+func (app *Config) SomeHandler(w http.ResponseWriter, r *http.Request) {
+    var tools toolbox.Tools
+	
+    if tools.CheckFileExist("./myfile.txt") {
+		// file exists
+        // do something with the file....
+    } else {
+		// file does not exist
+		// create file or error out
+}
 	
     // keep going in the handler...
 }
