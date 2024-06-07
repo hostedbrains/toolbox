@@ -131,7 +131,7 @@ func (app *Config) SomeHandler(w http.ResponseWriter, r *http.Request) {
     } else {
 		// file does not exist
 		// create file or error out
-}
+    }
 	
     // keep going in the handler...
 }
