@@ -448,3 +448,11 @@ func (t *Tools) ErrorXML(w http.ResponseWriter, err error, status ...int) error 
 
 	return t.WriteXML(w, statusCode, payload)
 }
+
+// CheckFileExist Checks if a file exists.
+func (t *Tools) CheckFileExist(filePath string) bool {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
