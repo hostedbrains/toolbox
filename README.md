@@ -25,6 +25,7 @@ The included tools are:
 - Create a directory, including all parent directories, if it does not already exist
 - Check if a file exists
 - Create a URL safe slug from a string
+- Setup Logger using Zerolog
 
 ## Installation
 
