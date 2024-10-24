@@ -499,6 +499,7 @@ func (t *Tools) LoggerGet(logLevelInt int, appEnv string, logFileName string) ze
 			for _, v := range buildInfo.Settings {
 				if v.Key == "vcs.revision" {
 					gitRevision = v.Value
+					fmt.Printf("Git Revision: %s\n", gitRevision)
 					break
 				}
 			}

@@ -25,7 +25,7 @@ The included tools are:
 - Create a directory, including all parent directories, if it does not already exist
 - Check if a file exists
 - Create a URL safe slug from a string
-- Setup Logger using Zerolog
+- Setup Logger service
 
 ## Installation
 
@@ -435,4 +435,26 @@ Output from this is:
 ```
 To slugify: hello, world! These are unsafe chars: こんにちは世界*!&^%
 Slugified: hello-world-these-are-unsafe-chars
+```
+
+### Setup logger service
+
+The logger service will write logs to STDOUT and to the logfile named as the third parameter.
+To setup and use the logger service:
+
+```go
+const webPort = "8099"
+
+func main() {
+    var tools toolbox.Tools
+
+    log := tools.LoggerGet(int(zerolog.InfoLevel), "production", "confserver.log")
+    log.Info().Str("webPort", webPort).Msgf("Starting Config Server on port '%s'", webPort)
+}
+```
+
+Output from the go run main.go:
+
+```log
+{"level":"info","git_revision":"","go_version":"go1.23.2","webPort":"8099","time":"2024-10-15T23:43:25.863795+01:00","message":"Starting Config Server on port '8099'"}
 ```
