@@ -7,15 +7,27 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/pkgerrors"
+	"github.com/spf13/viper"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"regexp"
+	"runtime/debug"
 	"strings"
+	"sync"
+	"time"
 )
+
+var once sync.Once
+
+var log zerolog.Logger
+
+var logLevel = int(zerolog.InfoLevel) // default to INFO
 
 // randomStringSource is the source for generating random strings.
 const randomStringSource = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321_+"
@@ -26,13 +38,13 @@ const defaultMaxUpload = 10485760
 // Tools is the type for this package. Create a variable of this type, and you have access
 // to all the exported methods with the receiver type *Tools.
 type Tools struct {
-	MaxJSONSize        int         // maximum size of JSON file we'll process
-	MaxXMLSize         int         // maximum size of XML file we'll process
-	MaxFileSize        int         // maximum size of uploaded files in bytes
-	AllowedFileTypes   []string    // allowed file types for upload (e.g. image/jpeg)
-	AllowUnknownFields bool        // if set to true, allow unknown fields in JSON
-	ErrorLog           *log.Logger // the info log.
-	InfoLog            *log.Logger // the error log.
+	MaxJSONSize        int      // maximum size of JSON file we'll process
+	MaxXMLSize         int      // maximum size of XML file we'll process
+	MaxFileSize        int      // maximum size of uploaded files in bytes
+	AllowedFileTypes   []string // allowed file types for upload (e.g. image/jpeg)
+	AllowUnknownFields bool     // if set to true, allow unknown fields in JSON
+	//ErrorLog           *log.Logger // the info log.
+	//InfoLog            *log.Logger // the error log.
 }
 
 // New returns a new toolbox with sensible defaults.
@@ -41,8 +53,8 @@ func New() Tools {
 		MaxJSONSize: defaultMaxUpload,
 		MaxXMLSize:  defaultMaxUpload,
 		MaxFileSize: defaultMaxUpload,
-		InfoLog:     log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),
-		ErrorLog:    log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
+		//InfoLog:     log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),
+		//ErrorLog:    log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
 	}
 }
 
@@ -58,6 +70,13 @@ type XMLResponse struct {
 	Error   bool        `xml:"error"`
 	Message string      `xml:"message"`
 	Data    interface{} `xml:"data,omitempty"`
+}
+
+// VersionData is the data structure for version data.
+type VersionData struct {
+	Builddate string `json:"builddate"`
+	Githash   string `json:"githash"`
+	Version   string `json:"version"`
 }
 
 // ReadJSON tries to read the body of a request and converts it from JSON to a variable. The third parameter, data,
@@ -455,4 +474,69 @@ func (t *Tools) CheckFileExist(filePath string) bool {
 		return false
 	}
 	return true
+}
+
+func (t *Tools) LoggerGet(logLevelInt int, appEnv string, logFileName string) zerolog.Logger {
+	once.Do(func() {
+		zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
+		zerolog.TimeFieldFormat = time.RFC3339Nano
+
+		logLevel = logLevelInt
+
+		var output io.Writer = zerolog.ConsoleWriter{
+			Out:        os.Stdout,
+			TimeFormat: time.RFC3339,
+		}
+
+		if appEnv != "development" {
+			fileLogger := &lumberjack.Logger{
+				Filename:   logFileName,
+				MaxSize:    5, //
+				MaxBackups: 10,
+				MaxAge:     14,
+				Compress:   true,
+			}
+
+			output = zerolog.MultiLevelWriter(os.Stdout, fileLogger)
+		}
+
+		var gitRevision string
+
+		buildInfo, ok := debug.ReadBuildInfo()
+		if ok {
+			for _, v := range buildInfo.Settings {
+				if v.Key == "vcs.revision" {
+					gitRevision = v.Value
+					fmt.Printf("Git Revision: %s\n", gitRevision)
+					break
+				}
+			}
+		}
+
+		log = zerolog.New(output).
+			Level(zerolog.Level(logLevel)).
+			With().
+			Timestamp().
+			Str("git_revision", gitRevision).
+			Str("go_version", buildInfo.GoVersion).
+			Logger()
+	})
+
+	return log
+}
+
+func (t *Tools) LoadVersionInfo(configName string, configType string, configFile string) VersionData {
+	viper.SetConfigName(configName)
+	viper.SetConfigType(configType)
+	viper.SetConfigFile(configFile)
+	err := viper.ReadInConfig()
+	if err != nil {
+		fmt.Printf("Error reading config file, %s", err)
+		return VersionData{}
+	}
+	var versionData VersionData
+	versionData.Version = viper.Get("version").(string)
+	versionData.Builddate = viper.Get("builddate").(string)
+	versionData.Githash = viper.Get("githash").(string)
+	return versionData
 }

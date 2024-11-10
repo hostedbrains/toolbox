@@ -6,14 +6,15 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/rs/zerolog"
 	"image"
 	"image/png"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"reflect"
 	"sync"
 	"testing"
 )
@@ -621,8 +622,6 @@ func TestTools_CheckFileExist(t1 *testing.T) {
 		MaxFileSize        int
 		AllowedFileTypes   []string
 		AllowUnknownFields bool
-		ErrorLog           *log.Logger
-		InfoLog            *log.Logger
 	}
 	type args struct {
 		filePath string
@@ -645,11 +644,90 @@ func TestTools_CheckFileExist(t1 *testing.T) {
 				MaxFileSize:        tt.fields.MaxFileSize,
 				AllowedFileTypes:   tt.fields.AllowedFileTypes,
 				AllowUnknownFields: tt.fields.AllowUnknownFields,
-				ErrorLog:           tt.fields.ErrorLog,
-				InfoLog:            tt.fields.InfoLog,
 			}
 			if got := t.CheckFileExist(tt.args.filePath); got != tt.want {
 				t1.Errorf("CheckFileExist() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTools_LoggerGet(t1 *testing.T) {
+	//var logger zerolog.Logger
+	type fields struct {
+		MaxJSONSize        int
+		MaxXMLSize         int
+		MaxFileSize        int
+		AllowedFileTypes   []string
+		AllowUnknownFields bool
+	}
+	type args struct {
+		logLevelInt int
+		appEnv      string
+		logFileName string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   zerolog.Logger
+	}{
+		// TODO: Add test cases.
+		//{"Test get logger", fields{}, args{1, "production", "./testdata/testing.log"}, logger},
+	}
+	for _, tt := range tests {
+		t1.Run(tt.name, func(t1 *testing.T) {
+			t := &Tools{
+				MaxJSONSize:        tt.fields.MaxJSONSize,
+				MaxXMLSize:         tt.fields.MaxXMLSize,
+				MaxFileSize:        tt.fields.MaxFileSize,
+				AllowedFileTypes:   tt.fields.AllowedFileTypes,
+				AllowUnknownFields: tt.fields.AllowUnknownFields,
+			}
+			if got := t.LoggerGet(tt.args.logLevelInt, tt.args.appEnv, tt.args.logFileName); !reflect.DeepEqual(got, tt.want) {
+				t1.Errorf("LoggerGet() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTools_LoadVersionInfo(t1 *testing.T) {
+	//var versionData VersionData
+	//versionData.Version = "v0.3.2"
+	//versionData.Githash = "3965f84"
+	//versionData.Builddate = "2024-11-08T22:12:54"
+	type fields struct {
+		MaxJSONSize        int
+		MaxXMLSize         int
+		MaxFileSize        int
+		AllowedFileTypes   []string
+		AllowUnknownFields bool
+	}
+	type args struct {
+		configName string
+		configType string
+		configFile string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   VersionData
+	}{
+		// TODO: Add test cases.
+		//{"Test read Version Data", fields{}, args{"testConfig", "yaml", "./testdata/testconfig.yaml"}, versionData},
+	}
+	for _, tt := range tests {
+		t1.Run(tt.name, func(t1 *testing.T) {
+			t := &Tools{
+				MaxJSONSize:        tt.fields.MaxJSONSize,
+				MaxXMLSize:         tt.fields.MaxXMLSize,
+				MaxFileSize:        tt.fields.MaxFileSize,
+				AllowedFileTypes:   tt.fields.AllowedFileTypes,
+				AllowUnknownFields: tt.fields.AllowUnknownFields,
+			}
+			if got := t.LoadVersionInfo(tt.args.configName, tt.args.configType, tt.args.configFile); !reflect.DeepEqual(got, tt.want) {
+				t1.Errorf("LoadVersionInfo() = %v, want %v", got, tt.want)
 			}
 		})
 	}
