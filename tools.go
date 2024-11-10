@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/pkgerrors"
+	"github.com/spf13/viper"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"net/http"
@@ -69,6 +70,13 @@ type XMLResponse struct {
 	Error   bool        `xml:"error"`
 	Message string      `xml:"message"`
 	Data    interface{} `xml:"data,omitempty"`
+}
+
+// VersionData is the data structure for version data.
+type VersionData struct {
+	Builddate string `json:"builddate"`
+	Githash   string `json:"githash"`
+	Version   string `json:"version"`
 }
 
 // ReadJSON tries to read the body of a request and converts it from JSON to a variable. The third parameter, data,
@@ -515,4 +523,20 @@ func (t *Tools) LoggerGet(logLevelInt int, appEnv string, logFileName string) ze
 	})
 
 	return log
+}
+
+func (t *Tools) LoadVersionInfo(configName string, configType string, configFile string) VersionData {
+	viper.SetConfigName(configName)
+	viper.SetConfigType(configType)
+	viper.SetConfigFile(configFile)
+	err := viper.ReadInConfig()
+	if err != nil {
+		fmt.Printf("Error reading config file, %s", err)
+		return VersionData{}
+	}
+	var versionData VersionData
+	versionData.Version = viper.Get("version").(string)
+	versionData.Builddate = viper.Get("builddate").(string)
+	versionData.Githash = viper.Get("githash").(string)
+	return versionData
 }

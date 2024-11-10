@@ -1,0 +1,8 @@
+buildutil:
+    version:
+        file: .version
+        path: ./
+    versiondata:
+        builddate: 2024-11-10T21:46:08
+        githash: 85ca145
+        version: v1.0.3
