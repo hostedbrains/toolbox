@@ -693,9 +693,9 @@ func TestTools_LoggerGet(t1 *testing.T) {
 
 func TestTools_LoadVersionInfo(t1 *testing.T) {
 	var versionData VersionData
-	//versionData.Version = "v0.3.2"
-	//versionData.Githash = "3965f84"
-	//versionData.Builddate = "2024-11-08T22:12:54"
+	versionData.Version = "v0.3.2"
+	versionData.Githash = "3965f84"
+	versionData.Builddate = "2024-11-08T22:12:54"
 	type fields struct {
 		MaxJSONSize        int
 		MaxXMLSize         int
