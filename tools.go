@@ -535,8 +535,8 @@ func (t *Tools) LoadVersionInfo(configName string, configType string, configFile
 		return VersionData{}
 	}
 	var versionData VersionData
-	versionData.Version = viper.Get("version").(string)
-	versionData.Builddate = viper.Get("builddate").(string)
-	versionData.Githash = viper.Get("githash").(string)
+	versionData.Version = viper.Get("buildutil.versiondata.version").(string)
+	versionData.Builddate = viper.Get("buildutil.versiondata.builddate").(string)
+	versionData.Githash = viper.Get("buildutil.versiondata.githash").(string)
 	return versionData
 }

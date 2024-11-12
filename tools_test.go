@@ -692,7 +692,7 @@ func TestTools_LoggerGet(t1 *testing.T) {
 }
 
 func TestTools_LoadVersionInfo(t1 *testing.T) {
-	//var versionData VersionData
+	var versionData VersionData
 	//versionData.Version = "v0.3.2"
 	//versionData.Githash = "3965f84"
 	//versionData.Builddate = "2024-11-08T22:12:54"
@@ -715,7 +715,7 @@ func TestTools_LoadVersionInfo(t1 *testing.T) {
 		want   VersionData
 	}{
 		// TODO: Add test cases.
-		//{"Test read Version Data", fields{}, args{"testConfig", "yaml", "./testdata/testconfig.yaml"}, versionData},
+		{"Test read Version Data", fields{}, args{"testConfig", "yaml", "./testdata/testconfig.yaml"}, versionData},
 	}
 	for _, tt := range tests {
 		t1.Run(tt.name, func(t1 *testing.T) {
