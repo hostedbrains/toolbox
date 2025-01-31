@@ -1,3 +1,22 @@
+// Package toolbox Copyright (c) 2024 Hostedbrains.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 package toolbox
 
 import (
@@ -476,6 +495,7 @@ func (t *Tools) CheckFileExist(filePath string) bool {
 	return true
 }
 
+// LoggerGet initializes and returns a zerolog.Logger instance with specified log level, environment, and log file name.
 func (t *Tools) LoggerGet(logLevelInt int, appEnv string, logFileName string) zerolog.Logger {
 	once.Do(func() {
 		zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
@@ -525,6 +545,7 @@ func (t *Tools) LoggerGet(logLevelInt int, appEnv string, logFileName string) ze
 	return log
 }
 
+// LoadVersionInfo reads version information from a configuration file and returns a populated VersionData object.
 func (t *Tools) LoadVersionInfo(configName string, configType string, configFile string) VersionData {
 	viper.SetConfigName(configName)
 	viper.SetConfigType(configType)
