@@ -5,4 +5,4 @@ buildutil:
     versiondata:
         builddate: 2025-01-09T20:48:37
         githash: 7de26df
-        version: v1.2.0
+        version: v1.2.1
