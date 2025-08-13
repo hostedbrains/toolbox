@@ -12,7 +12,7 @@ STATICCHECK = $(GOBIN)/staticcheck
 .PHONY: build_all
 build_all: test lint scan
 	@echo "Building toolbox binary..."
-	@env GOOS=linux CGO_ENABLED=0 go build -o bin/${TOOLBOX_BINARY} .
+	@env GOOS=linux CGO_ENABLED=0 buildutil --build --output bin/${TOOLBOX_BINARY} --withLDFlags
 	@echo "Done!"
 
 ## test: executes tests

@@ -3,6 +3,6 @@ buildutil:
         file: .version
         path: ./
     versiondata:
-        builddate: 2025-03-10T20:11:12
-        githash: a0a2861
-        version: v1.2.1
+        builddate: 2025-08-13T21:35:10
+        githash: b8e01c8
+        version: v1.3.0
