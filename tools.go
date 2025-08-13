@@ -26,10 +26,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/pkgerrors"
-	"github.com/spf13/viper"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"net/http"
 	"os"
@@ -40,6 +36,11 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/pkgerrors"
+	"github.com/spf13/viper"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var once sync.Once
@@ -539,6 +540,7 @@ func (t *Tools) LoggerGet(logLevelInt int, appEnv string, logFileName string) ze
 			Timestamp().
 			Str("git_revision", gitRevision).
 			Str("go_version", buildInfo.GoVersion).
+			Caller().
 			Logger()
 	})
 

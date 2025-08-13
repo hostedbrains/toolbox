@@ -1,8 +1,7 @@
 {
   "release-type": "go",
-
   "tag-separator": "@",
-  "include-component-in-tag": true,
+  "include-component-in-tag": false,
   "packages": {
     ".": {
       "package-name": "toolbox"
