@@ -9,32 +9,27 @@ GOLINT = $(GOBIN)/golint
 STATICCHECK = $(GOBIN)/staticcheck
 
 ## build_broker: builds the toolbox binary as a linux executable
-.PHONY: build_all
 build_all: test lint scan
 	@echo "Building toolbox binary..."
 	@env GOOS=linux CGO_ENABLED=0 buildutil --build --output bin/${TOOLBOX_BINARY} --withLDFlags
 	@echo "Done!"
 
 ## test: executes tests
-.PHONY: test
 test:
 	@echo "Testing toolbox application..."
 	@go test -coverprofile cover.out -v ./
 
 ## Create test coverage report
-.PHONY: testreport
 testreport:
 	@echo "Generating test report..."
 	@go tool cover -html=cover.out
 
 ## Vulnerability scanning
-.PHONY: scan
 scan:
 	@echo "Doing vulnerability scanning"
 	@govulncheck ./...
 
 ## Download required modules.
-.PHONY: install
 install:
 	go mod download
 
@@ -44,7 +39,6 @@ $(GOLINT): tools/go.mod
 $(STATICCHECK): tools/go.mod
 	cd tools && go install honnef.co/go/tools/cmd/staticcheck@2025.1
 
-.PHONY: lint
 lint: install $(GOLINT) $(STATICCHECK)
 	@rm -rf lint.log
 	@echo "Checking gofmt"
@@ -58,3 +52,6 @@ lint: install $(GOLINT) $(STATICCHECK)
 	@echo "Checking for license headers..."
 	@./.build/check_license.sh | tee -a lint.log
 	@[ ! -s lint.log ]
+
+
+.PHONY: build_all lint install test scan testreport
